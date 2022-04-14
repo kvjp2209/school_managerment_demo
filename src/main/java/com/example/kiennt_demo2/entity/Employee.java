@@ -1,4 +1,4 @@
-package com.example.kiennt_demo2.model;
+package com.example.kiennt_demo2.entity;
 
 import javax.persistence.*;
 
@@ -8,7 +8,7 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "`id`")
-    private int id;
+    private long id;
 
     @Column(name = "`name`", columnDefinition = "VARCHAR(255)", nullable = false)
     private String name;
@@ -26,7 +26,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(int id, String name, int age, String address, int roleId) {
+    public Employee(long id, String name, int age, String address, int roleId) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -41,11 +41,11 @@ public class Employee {
         this.roleId = roleId;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -79,16 +79,5 @@ public class Employee {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
-    }
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", address='" + address + '\'' +
-                ", roleId=" + roleId +
-                '}';
     }
 }

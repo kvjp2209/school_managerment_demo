@@ -1,6 +1,7 @@
 package com.example.kiennt_demo2.service;
 
-import com.example.kiennt_demo2.model.Employee;
+import com.example.kiennt_demo2.common.ApiResponse;
+import com.example.kiennt_demo2.entity.Employee;
 import com.example.kiennt_demo2.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,10 +32,16 @@ public class EmployeeService {
     }
 
     //delete the single employee
-    public Employee deleteEmployee(int eid) {
-        Employee employee = employeeRepository.getById(eid);
+    public ApiResponse deleteEmployee(int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        Employee employee = employeeRepository.findById(id);
+        if (employee == null) {
+            apiResponse.setError("Not Found!!!");
+            return apiResponse;
+        }
         employeeRepository.delete(employee);
-        return employee;
+        apiResponse.setData("success!!!");
+        return apiResponse;
     }
 
     public Employee findEmployeeById(int id) {
@@ -42,17 +49,22 @@ public class EmployeeService {
         return employee;
     }
 
-    public Employee updateEmployee(Employee e, int id) {
+    public ApiResponse updateEmployee(Employee e, int id) {
+        ApiResponse apiResponse = new ApiResponse();
+
         Employee employee = employeeRepository.findById(id);
-        if (employee != null) {
-            employee.setName(e.getName());
-            employee.setAge(e.getAge());
-            employee.setAddress(e.getAddress());
-            employee.setRoleId(e.getRoleId());
-
-            employeeRepository.save(employee);
+        if (employee == null) {
+            apiResponse.setError("Not Found!!!");
+            return apiResponse;
         }
+        employee.setName(e.getName());
+        employee.setAge(e.getAge());
+        employee.setAddress(e.getAddress());
+        employee.setRoleId(e.getRoleId());
 
-        return employee;
+        employeeRepository.save(employee);
+        apiResponse.setData(employee);
+
+        return apiResponse;
     }
 }
