@@ -26,13 +26,15 @@ public class EmployeeService {
     }
 
     //get all employees
-    public List<Employee> getAllEmployees() {
+    public ApiResponse getAllEmployees() {
+        ApiResponse apiResponse = new ApiResponse();
         List<Employee> employees = employeeRepository.findAll();
-        return employees;
+        apiResponse.setData(employees);
+        return apiResponse;
     }
 
     //delete the single employee
-    public ApiResponse deleteEmployee(int id) {
+    public ApiResponse deleteEmployee(long id) {
         ApiResponse apiResponse = new ApiResponse();
         Employee employee = employeeRepository.findById(id);
         if (employee == null) {
@@ -44,8 +46,8 @@ public class EmployeeService {
         return apiResponse;
     }
 
-    public Employee findEmployeeById(int id) {
-        Employee employee = employeeRepository.getById(id);
+    public Employee findEmployeeById(long id) {
+        Employee employee = employeeRepository.findById(id);
         return employee;
     }
 

@@ -25,11 +25,8 @@ public class EmployeeController {
 
     @GetMapping(value = "")
     public ApiResponse getAllEmployees() {
-        ApiResponse apiResponse = new ApiResponse();
-
-        List<Employee> employees = employeeService.getAllEmployees();
-        apiResponse.setData(employees);
-        return apiResponse;
+        ApiResponse result = employeeService.getAllEmployees();
+        return result;
     }
 
     @DeleteMapping(value = "/{id}")
