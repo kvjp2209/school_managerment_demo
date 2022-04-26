@@ -32,11 +32,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         // Khi đã có user rồi thì mình query xem user đó có những quyền gì (Admin hay User)
         // [ROLE_USER, ROLE_ADMIN,..]
-        UserDetailsImpl userDetails = new UserDetailsImpl(user.getUsername(), user.getPassword(), getAuthorities(user));
+
+        UserDetailsImpl userDetails = UserDetailsImpl.build(user);
         return userDetails;
     }
 
     public List<? extends GrantedAuthority> getAuthorities(User user) {
+        // Mặc định mình sẽ để tất cả là ROLE. Để demo cho đơn giản.
+
         Set<Role> role = user.getRoles();
 
         List<GrantedAuthority> authorities = new ArrayList<>();

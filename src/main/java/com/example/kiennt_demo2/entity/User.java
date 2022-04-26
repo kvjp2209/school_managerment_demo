@@ -18,24 +18,20 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @NotBlank
-    @Column(name = "username")
+    @Size(max = 20)
     private String username;
 
     @NotBlank
-    @Column(name = "password")
+    @Size(max = 20)
     private String password;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "age")
     private int age;
 
-    @Column(name = "address")
     private String address;
 
 
