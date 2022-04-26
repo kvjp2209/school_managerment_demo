@@ -1,5 +1,6 @@
 package com.example.kiennt_demo2.security.impl;
 
+import com.example.kiennt_demo2.entity.Role;
 import com.example.kiennt_demo2.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,8 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
@@ -29,7 +32,6 @@ public class UserDetailsImpl implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
-
 //        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(null, "kiennt1",authorities);
 //        token.setDetails(new WebAuthenticationDetails(request));
 //        Authentication authentication = this.authenticationProvider.authenticate(token);
@@ -40,7 +42,6 @@ public class UserDetailsImpl implements UserDetails {
     }
 
 
-
     public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
@@ -48,9 +49,23 @@ public class UserDetailsImpl implements UserDetails {
     }
 
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    public List<? extends GrantedAuthority> getAuthorities(User user) {
+        // Mặc định mình sẽ để tất cả là ROLE. Để demo cho đơn giản.
+
+        Set<Role> role = user.getRoles();
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        for (Role listRole : role) {
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(listRole.getName().name());
+            authorities.add(grantedAuthority);
+        }
+        //authorities.add(new SimpleGrantedAuthority("USER"));
         return authorities;
     }
 
