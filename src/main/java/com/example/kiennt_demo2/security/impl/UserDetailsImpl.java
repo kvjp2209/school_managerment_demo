@@ -12,51 +12,42 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
+    private User user;
 
-    private String username;
+    public User getUser() {
+        return user;
+    }
 
-    @JsonIgnore
-    private String password;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public UserDetailsImpl(User user) {
+        this.user = user;
+    }
 
     private Collection<? extends GrantedAuthority> authorities;
+
+    public UserDetailsImpl(User user, Collection<? extends GrantedAuthority> authorities) {
+        this.user = user;
+        this.authorities = authorities;
+    }
 
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
-//        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(null, "kiennt1",authorities);
-//        token.setDetails(new WebAuthenticationDetails(request));
-//        Authentication authentication = this.authenticationProvider.authenticate(token);
-//        SecurityContextHolder.getContext().setAuthentication(token);
-//        System.out.println(a.getName());
-
-        return new UserDetailsImpl(user.getUsername(), user.getPassword(), authorities);
+        return new UserDetailsImpl(
+         user, authorities);
     }
-
-
-    public UserDetailsImpl(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
-    }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    public List<? extends GrantedAuthority> getAuthorities(User user) {
-        // Mặc định mình sẽ để tất cả là ROLE. Để demo cho đơn giản.
-
         Set<Role> role = user.getRoles();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -65,18 +56,16 @@ public class UserDetailsImpl implements UserDetails {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(listRole.getName().name());
             authorities.add(grantedAuthority);
         }
-        //authorities.add(new SimpleGrantedAuthority("USER"));
         return authorities;
     }
-
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return user.getUsername();
     }
 
     @Override

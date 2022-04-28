@@ -32,21 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         // Khi đã có user rồi thì mình query xem user đó có những quyền gì (Admin hay User)
         // [ROLE_USER, ROLE_ADMIN,..]
-        UserDetailsImpl userDetails = new UserDetailsImpl(user.getUsername(), user.getPassword(), getAuthorities(user));
-        return userDetails;
-    }
-
-    public List<? extends GrantedAuthority> getAuthorities(User user) {
-        Set<Role> role = user.getRoles();
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-
-        for (Role listRole : role) {
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(listRole.getName().name());
-            authorities.add(grantedAuthority);
-        }
-        //authorities.add(new SimpleGrantedAuthority("USER"));
-        return authorities;
+        return UserDetailsImpl.build(user);
     }
 
 }
