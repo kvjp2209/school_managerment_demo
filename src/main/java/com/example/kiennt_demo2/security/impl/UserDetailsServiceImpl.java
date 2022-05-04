@@ -1,37 +1,27 @@
 package com.example.kiennt_demo2.security.impl;
 
-import com.example.kiennt_demo2.entity.Role;
+
 import com.example.kiennt_demo2.entity.User;
 import com.example.kiennt_demo2.repository.UserRepository;
+import com.example.kiennt_demo2.security.impl.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private UserRepository userRepository;
-
+    UserRepository userRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Kiểm tra xem user có tồn tại trong database không?
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
-        // Khi đã có user rồi thì mình query xem user đó có những quyền gì (Admin hay User)
-        // [ROLE_USER, ROLE_ADMIN,..]
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+
         return UserDetailsImpl.build(user);
     }
 

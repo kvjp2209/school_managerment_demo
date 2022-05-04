@@ -1,4 +1,4 @@
-package com.example.kiennt_demo2.dto;
+package com.example.kiennt_demo2.dto.request;
 
 public class LoginRequestDto {
     private String username;

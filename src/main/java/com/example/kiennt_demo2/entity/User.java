@@ -1,9 +1,6 @@
 package com.example.kiennt_demo2.entity;
 
 import lombok.Data;
-import lombok.ToString;
-import org.hibernate.engine.internal.Cascade;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -18,14 +15,13 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "`id`")
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
     private String username;
 
     @NotBlank
-    @Size(max = 20)
     private String password;
 
     private String name;
@@ -85,4 +81,5 @@ public class User {
                 ", roles=" + roles +
                 '}';
     }
+
 }

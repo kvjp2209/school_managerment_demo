@@ -34,7 +34,7 @@ public class UserService {
     public ApiResponse createUser(UserRequestDto userRequestDto) {
         ApiResponse apiResponse = new ApiResponse();
 
-        if (userRepository.findByUsername(userRequestDto.getUsername()) != null) {
+        if (userRepository.findByUsername2(userRequestDto.getUsername()) != null) {
             apiResponse.setError("Username existed");
             return apiResponse;
         }
@@ -120,7 +120,7 @@ public class UserService {
     @Transactional
     public ApiResponse updateUser(UserRequestDto userRequestDto, long id) {
         ApiResponse apiResponse = new ApiResponse();
-        User user = userRepository.findByUsername(userRequestDto.getUsername());
+        User user = userRepository.findByUsername(userRequestDto.getUsername()).get();
         if (user == null) {
             apiResponse.setError("Not Found!!!");
             return apiResponse;
@@ -133,6 +133,31 @@ public class UserService {
         user.setName(userRequestDto.getName());
         user.setAge((userRequestDto.getAge()));
         user.setAddress(userRequestDto.getAddress());
+
+        Set<String> strRoles = userRequestDto.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role role = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(role);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("ERROR: Role is not found!"));
+                        roles.add(adminRole);
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("ERROR: Role is not found!"));
+                        roles.add(userRole);
+
+                }
+            });
+        }
+        user.setRoles(roles);
 
         userRepository.save(user);
 

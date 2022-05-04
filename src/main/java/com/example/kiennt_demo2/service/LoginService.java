@@ -1,7 +1,7 @@
 package com.example.kiennt_demo2.service;
 
 import com.example.kiennt_demo2.common.ApiResponse;
-import com.example.kiennt_demo2.dto.LoginRequestDto;
+import com.example.kiennt_demo2.dto.request.LoginRequestDto;
 import com.example.kiennt_demo2.dto.SignUpRequestDto;
 import com.example.kiennt_demo2.entity.User;
 import com.example.kiennt_demo2.repository.UserRepository;

@@ -9,6 +9,8 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/admin")
 public class UserController {
@@ -20,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ApiResponse createUser(@RequestBody UserRequestDto userRequestDto) {
+    public ApiResponse createUser(@Valid @RequestBody UserRequestDto userRequestDto) {
         ApiResponse apiResponse = userService.createUser(userRequestDto);
         return apiResponse;
     }

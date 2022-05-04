@@ -16,24 +16,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserDetailsImpl implements UserDetails {
-    private User user;
+    private static final long serialVersionUID = 1L;
 
-    public User getUser() {
-        return user;
-    }
+    private Long id;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    private String username;
 
-    public UserDetailsImpl(User user) {
-        this.user = user;
-    }
+    @JsonIgnore
+    private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(User user, Collection<? extends GrantedAuthority> authorities) {
-        this.user = user;
+    public UserDetailsImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
         this.authorities = authorities;
     }
 
@@ -43,29 +40,29 @@ public class UserDetailsImpl implements UserDetails {
                 .collect(Collectors.toList());
 
         return new UserDetailsImpl(
-         user, authorities);
+                user.getId(),
+                user.getUsername(),
+                user.getPassword(),
+                authorities);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Role> role = user.getRoles();
-
-        List<GrantedAuthority> authorities = new ArrayList<>();
-
-        for (Role listRole : role) {
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(listRole.getName().name());
-            authorities.add(grantedAuthority);
-        }
         return authorities;
     }
+
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return username;
     }
 
     @Override
@@ -86,5 +83,15 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        UserDetailsImpl user = (UserDetailsImpl) o;
+        return Objects.equals(id, user.id);
     }
 }
