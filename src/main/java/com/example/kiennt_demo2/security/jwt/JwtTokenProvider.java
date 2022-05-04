@@ -3,6 +3,7 @@ package com.example.kiennt_demo2.security.jwt;
 import com.example.kiennt_demo2.security.impl.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +13,12 @@ import java.util.Date;
 @Slf4j
 public class JwtTokenProvider {
     // Đoạn JWT_SECRET này là bí mật, chỉ có phía server biết
-    private final String JWT_SECRET = "lodaaaaaa";
+    @Value("${kien.app.jwtSecret}")
+    private String JWT_SECRET;
 
     //Thời gian có hiệu lực của chuỗi jwt
-    private final long JWT_EXPIRATION = 604800000L;
+    @Value("${kien.app.jwtExpirationMs}")
+    private long JWT_EXPIRATION;
 
     // Tạo ra jwt từ thông tin user
     public String generateToken(Authentication authentication) {
